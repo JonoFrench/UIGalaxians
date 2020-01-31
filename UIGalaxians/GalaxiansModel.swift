@@ -20,7 +20,7 @@ enum GameState {
     case hiScore
 }
 
-final class InvadersModel {
+final class GalaxiansModel {
     weak var viewController:GalaxiansViewController?
     var layoutSet: Bool = false
     var bulletFired: Bool = false

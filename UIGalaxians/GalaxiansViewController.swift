@@ -69,7 +69,7 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
     var invaderStartY = 100
     var invaderLevelIncrease = 20
     
-    var model:InvadersModel = InvadersModel()
+    var model:GalaxiansModel = GalaxiansModel()
     var base:Base?
     var motherShip:MotherShip?
     var baseLineY: CGFloat = 0
@@ -188,7 +188,7 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
             introView.addSubview(title)
             
             let subTitle = UIView(frame: CGRect(x: 0, y: titleY + titleHeight + 5, width: Int(w), height: subTitleHeight))
-            subTitle.addSubview(alpha.get(string: "INVADERS", size: (subTitle.frame.size), fcol: .green, bcol:.red ))
+            subTitle.addSubview(alpha.get(string: "GALAXIANS", size: (subTitle.frame.size), fcol: .green, bcol:.red ))
             subTitle.backgroundColor = .clear
             introView.addSubview(subTitle)
             

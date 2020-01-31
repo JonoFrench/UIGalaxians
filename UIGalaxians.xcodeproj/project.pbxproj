@@ -10,14 +10,13 @@
 		343A37F923E0554600BB90B2 /* Sounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343A37F823E0554600BB90B2 /* Sounds.swift */; };
 		343A37FB23E056C200BB90B2 /* SetupGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343A37FA23E056C200BB90B2 /* SetupGame.swift */; };
 		3481DC2023D8884700FA7FF6 /* UIHighScores.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34BC998123D85FFF0024A1BA /* UIHighScores.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		34922DEA23E440920037AD1D /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34922DE923E440920037AD1D /* Info.plist */; };
 		34BC994623D760E30024A1BA /* Sprite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BC994523D760E30024A1BA /* Sprite.swift */; };
 		34D7225E221ADEF200A46057 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D7225D221ADEF200A46057 /* AppDelegate.swift */; };
 		34D72260221ADEF200A46057 /* GalaxiansViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D7225F221ADEF200A46057 /* GalaxiansViewController.swift */; };
 		34D72265221ADEF500A46057 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 34D72264221ADEF500A46057 /* Assets.xcassets */; };
 		34D72268221ADEF500A46057 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 34D72266221ADEF500A46057 /* LaunchScreen.storyboard */; };
 		34D72272221C535100A46057 /* extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D72271221C535100A46057 /* extentions.swift */; };
-		34D7227622204CE900A46057 /* InvadersModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D7227522204CE800A46057 /* InvadersModel.swift */; };
+		34D7227622204CE900A46057 /* GalaxiansModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D7227522204CE800A46057 /* GalaxiansModel.swift */; };
 		34D7227822242D9300A46057 /* shoot.wav in Resources */ = {isa = PBXBuildFile; fileRef = 34D7227722242D9200A46057 /* shoot.wav */; };
 		34D7227B22242EFE00A46057 /* invaderkilled.wav in Resources */ = {isa = PBXBuildFile; fileRef = 34D7227922242EFD00A46057 /* invaderkilled.wav */; };
 		34D7227C22242EFE00A46057 /* explosion.wav in Resources */ = {isa = PBXBuildFile; fileRef = 34D7227A22242EFE00A46057 /* explosion.wav */; };
@@ -75,7 +74,7 @@
 /* Begin PBXFileReference section */
 		343A37F823E0554600BB90B2 /* Sounds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sounds.swift; sourceTree = "<group>"; };
 		343A37FA23E056C200BB90B2 /* SetupGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupGame.swift; sourceTree = "<group>"; };
-		34922DE923E440920037AD1D /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		34922DF723E44A360037AD1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = SOURCE_ROOT; };
 		34BC994523D760E30024A1BA /* Sprite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sprite.swift; sourceTree = "<group>"; };
 		34BC997A23D85FFF0024A1BA /* UIHighScores.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = UIHighScores.xcodeproj; path = ../UIHighScores/UIHighScores.xcodeproj; sourceTree = "<group>"; };
 		34D7225A221ADEF200A46057 /* Retro Galaxians.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Retro Galaxians.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -84,7 +83,7 @@
 		34D72264221ADEF500A46057 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		34D72267221ADEF500A46057 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		34D72271221C535100A46057 /* extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = extentions.swift; sourceTree = "<group>"; };
-		34D7227522204CE800A46057 /* InvadersModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvadersModel.swift; sourceTree = "<group>"; };
+		34D7227522204CE800A46057 /* GalaxiansModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalaxiansModel.swift; sourceTree = "<group>"; };
 		34D7227722242D9200A46057 /* shoot.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = shoot.wav; sourceTree = "<group>"; };
 		34D7227922242EFD00A46057 /* invaderkilled.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = invaderkilled.wav; sourceTree = "<group>"; };
 		34D7227A22242EFE00A46057 /* explosion.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = explosion.wav; sourceTree = "<group>"; };
@@ -164,14 +163,14 @@
 		34D7225C221ADEF200A46057 /* UIGalaxians */ = {
 			isa = PBXGroup;
 			children = (
-				34922DE923E440920037AD1D /* Info.plist */,
+				34922DF723E44A360037AD1D /* Info.plist */,
 				34FC7C3623E43F29007E0E3A /* Main.storyboard */,
 				343A37FA23E056C200BB90B2 /* SetupGame.swift */,
 				34BC994723D7650A0024A1BA /* Sprites */,
 				34D7225D221ADEF200A46057 /* AppDelegate.swift */,
 				34D72264221ADEF500A46057 /* Assets.xcassets */,
 				34D72271221C535100A46057 /* extentions.swift */,
-				34D7227522204CE800A46057 /* InvadersModel.swift */,
+				34D7227522204CE800A46057 /* GalaxiansModel.swift */,
 				34D7225F221ADEF200A46057 /* GalaxiansViewController.swift */,
 				34D72266221ADEF500A46057 /* LaunchScreen.storyboard */,
 				34D7227D22242F0300A46057 /* Sounds */,
@@ -308,7 +307,6 @@
 			files = (
 				34D7227C22242EFE00A46057 /* explosion.wav in Resources */,
 				34D7227B22242EFE00A46057 /* invaderkilled.wav in Resources */,
-				34922DEA23E440920037AD1D /* Info.plist in Resources */,
 				34D72268221ADEF500A46057 /* LaunchScreen.storyboard in Resources */,
 				34FC7C3823E43F29007E0E3A /* Main.storyboard in Resources */,
 				34D72265221ADEF500A46057 /* Assets.xcassets in Resources */,
@@ -327,7 +325,7 @@
 			files = (
 				34BC994623D760E30024A1BA /* Sprite.swift in Sources */,
 				34D72272221C535100A46057 /* extentions.swift in Sources */,
-				34D7227622204CE900A46057 /* InvadersModel.swift in Sources */,
+				34D7227622204CE900A46057 /* GalaxiansModel.swift in Sources */,
 				34D72260221ADEF200A46057 /* GalaxiansViewController.swift in Sources */,
 				343A37F923E0554600BB90B2 /* Sounds.swift in Sources */,
 				34FC7B7023E06312007E0E3A /* Invaders.swift in Sources */,
