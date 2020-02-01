@@ -16,12 +16,20 @@ class Invader: UISprite, Animates {
     var originalPosition:CGPoint = CGPoint(x: 0, y: 0)
     var returnPosition:CGPoint = CGPoint(x: 0, y: 0)
     var rotatePoint:Int = 0
-    var bombingOffsets:[CGPoint] = []
+    //var bombingOffsets:[CGPoint] = []
     var diveX = 0
     var diveY = 0
     var rotateRight = false
+    var invaderType = 0
+    var invaderPoints = 0
+    var isConvoy:Bool = false
+    var convoyInvaders:[Invader] = []
+    
+    
     let types = [invaderAnimations1(),invaderAnimations2(),invaderAnimations3(),invaderAnimations4(),invaderAnimations1(),invaderAnimations1()]
-    init(pos:CGPoint,height:Int,width:Int,invaderType:Int) {
+    init(pos:CGPoint,height:Int,width:Int,invaderType:Int,invaderPoints:Int) {
+        self.invaderType = invaderType
+        self.invaderPoints = invaderPoints
         super.init(pos: pos, height: height, width: width, animateArray: types[invaderType],frameWith:14,frameHeight:11,frames:2,speed:0.25)
     }
 }

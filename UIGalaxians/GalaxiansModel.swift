@@ -58,7 +58,7 @@ final class GalaxiansModel {
             viewController?.updateScore()
         }
     }
-    var baseSpeed: CGFloat = 2
+    var baseSpeed: CGFloat = 4
     var leftMove: CGFloat = 0
     var rightMove: CGFloat = 0
     var invaderXSpeed:Int = 1

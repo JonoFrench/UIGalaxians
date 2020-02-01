@@ -18,15 +18,16 @@ final class SoundFX {
     
     var hitAudioPlayer: AVAudioPlayer?
     var shootAudioPlayer: AVAudioPlayer?
-    var motherAudioPlayer: AVAudioPlayer?
+    var startAudioPlayer: AVAudioPlayer?
     var baseAudioPlayer: AVAudioPlayer?
     var invaderAudioPlayer: AVAudioPlayer?
-    
-    lazy var shooturl = Bundle.main.url(forResource: "shoot", withExtension: "wav")
-    lazy var killurl = Bundle.main.url(forResource: "invaderkilled", withExtension: "wav")
+    //var observe:obser
+    lazy var shooturl = Bundle.main.url(forResource: "Galaxian_Fire", withExtension: "wav")
+    lazy var starturl = Bundle.main.url(forResource: "Galaxian_Start", withExtension: "wav")
+    lazy var killurl = Bundle.main.url(forResource: "Galaxian_Hit", withExtension: "wav")
     lazy var explosionurl = Bundle.main.url(forResource: "explosion", withExtension: "wav")
     lazy var ufourl = Bundle.main.url(forResource: "ufo_highpitch", withExtension: "wav")
-    lazy var invurl = Bundle.main.url(forResource: "fastinvader1", withExtension: "wav")
+    lazy var invurl = Bundle.main.url(forResource: "Galaxian_Background", withExtension: "wav")
     
     init() {
         do {
@@ -35,8 +36,9 @@ final class SoundFX {
             shootAudioPlayer = try AVAudioPlayer(contentsOf: shooturl!, fileTypeHint: AVFileType.wav.rawValue)
             hitAudioPlayer = try AVAudioPlayer(contentsOf: killurl!, fileTypeHint: AVFileType.wav.rawValue)
             baseAudioPlayer = try AVAudioPlayer(contentsOf: explosionurl!, fileTypeHint: AVFileType.wav.rawValue)
-            motherAudioPlayer = try AVAudioPlayer(contentsOf: ufourl!, fileTypeHint: AVFileType.wav.rawValue)
+            startAudioPlayer = try AVAudioPlayer(contentsOf: starturl!, fileTypeHint: AVFileType.wav.rawValue)
             invaderAudioPlayer = try AVAudioPlayer(contentsOf: invurl!, fileTypeHint: AVFileType.wav.rawValue)
+            //NotificationCenter.default.addObserver(self, selector: #selector(self.finishedPlaying(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: invaderAudioPlayer)
         } catch let error {
             print(error.localizedDescription)
         }
@@ -61,10 +63,10 @@ final class SoundFX {
         Thread.detachNewThreadSelector(#selector(play), toTarget: self, with: baseAudioPlayer)
     }
     
-    func motherSound()
+    func startSound()
     {
-        guard let motherAudioPlayer = motherAudioPlayer else { return }
-        Thread.detachNewThreadSelector(#selector(play), toTarget: self, with: motherAudioPlayer)
+        guard let startAudioPlayer = startAudioPlayer else { return }
+        Thread.detachNewThreadSelector(#selector(play), toTarget: self, with: startAudioPlayer)
     }
     
     func invaderSound()
@@ -73,4 +75,8 @@ final class SoundFX {
         Thread.detachNewThreadSelector(#selector(play), toTarget: self, with: invaderAudioPlayer)
     }
     
+    
+    @objc func finishedPlaying( _ myNotification:NSNotification) {
+        invaderSound()
+    }
 }

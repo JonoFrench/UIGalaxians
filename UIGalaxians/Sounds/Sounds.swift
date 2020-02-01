@@ -24,7 +24,7 @@ extension GalaxiansViewController {
 //    }
 
     func invaderSound() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.40) {
             self.soundFX.invaderSound()
             if self.model.gameState == .playing || self.model.gameState == .loading || self.model.gameState == .starting {
                 self.invaderSound()
