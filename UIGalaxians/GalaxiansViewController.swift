@@ -58,7 +58,8 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
     var invaderPosY = 300
     var invaderFinishY = 600
     var invaderStride = 60
-    var invaderSize = 40
+    var invaderWidth = 30
+    var invaderHeight = 25
     var introInvaders:CGFloat = 6
     var introView:UIView?
     var gameoverView:UIView?
@@ -71,17 +72,17 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
     
     var model:GalaxiansModel = GalaxiansModel()
     var base:Base?
-    var motherShip:MotherShip?
     var baseLineY: CGFloat = 0
     var viewWidth: CGFloat = 0
     var viewHeight: CGFloat = 0
     var bullet:Bullet?
     var invaders:[Invader] = []
     var bombs:[Bomb] = []
-    var silos:[Silo] = []
     var soundFX:SoundFX = SoundFX()
     var scoreView:StringViewArray = StringViewArray()
     var highScore:UIHighScores = UIHighScores()
+    var loopPoints = 80
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -104,7 +105,7 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        setConstraints()        
+        setConstraints()
     }
     
     override func viewDidLayoutSubviews() {
@@ -157,7 +158,7 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
             invaderPosY = 220
             invaderFinishY = 420
             invaderStride = 50
-            invaderSize = 35
+            //invaderSize = 35
             introInvaders = 5
             
             siloBaseLine = 90
@@ -169,7 +170,7 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
         }
     }
     
-   
+    
     fileprivate func setIntro(){
         introView = UIView(frame: CGRect(x: 0, y: 0, width: (coverView?.frame.width)!, height: (coverView?.frame.height)!))
         highScore = UIHighScores.init(xPos: 0, yPos: highScoreYpos, width: (introView?.frame.width)!, height: ((coverView?.frame.height)!) - (highScoreHeight))
@@ -220,7 +221,7 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
         for i in stride(from: step, to: step * 6, by: step) {
             invaderType = 0
             for z in stride(from: invaderPosY, to: invaderFinishY, by: invaderStride){
-                let invader:Invader = Invader(pos: CGPoint(x: viewWidth / 2, y: 20), height: invaderSize, width: invaderSize, invaderType:invaderType)
+                let invader:Invader = Invader(pos: CGPoint(x: viewWidth / 2, y: 20), height: invaderHeight, width: invaderWidth, invaderType:invaderType)
                 invader.spriteView?.alpha = 0
                 invader.spriteView?.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
                 self.view.addSubview(invader.spriteView!)
@@ -250,16 +251,13 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
             })
         }
         
-//        if let hiscore = highScore {
-            highScore.removeHighscore()
-//        }
+        //        if let hiscore = highScore {
+        highScore.removeHighscore()
+        //        }
     }
     
     fileprivate func removeWonInvaders(){
-        for s in silos {
-            s.isDying = true
-            s.startAnimating()
-        }
+        
         
         let _ = invaders.filter{ !$0.isDead }.map{ invader in UIView.animate(withDuration: 1.0, delay: 0.0, options: [], animations: {
             invader.spriteView?.transform = CGAffineTransform(scaleX: 3.1, y: 3.1)
@@ -335,12 +333,7 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
         }
         invaders.removeAll()
         
-        for s in silos {
-            if let ssv = s.spriteView {
-                ssv.removeFromSuperview()
-            }
-        }
-        silos.removeAll()
+        
         
         for b in bombs {
             if let bsv = b.spriteView {
@@ -356,25 +349,11 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
         
         base?.spriteView?.removeFromSuperview()
         base = nil
-        
-        if let msv = motherShip?.spriteView {
-            msv.removeFromSuperview()
-            motherShip = nil
-        }
     }
     
     fileprivate func nextLevel() {
         model.gameState = .loading
-        for s in silos {
-            if let ssv = s.spriteView {
-                ssv.removeFromSuperview()
-            }
-        }
-        silos.removeAll()
-        //No silos after level 5
-        if model.level < 5 {
-            setSilos()
-        }
+        
         setInvaders()
     }
     
@@ -385,10 +364,7 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
             }
         }
         bombs.removeAll()
-        if motherShip != nil {
-            motherShip?.spriteView?.removeFromSuperview()
-            motherShip = nil
-        }
+        
     }
     
     fileprivate func startGame() {
@@ -399,36 +375,13 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
         }, completion: { (finished: Bool) in
             self.introView?.removeFromSuperview()
             self.model.reset()
-            self.setSilos()
             self.setInvaders()
             self.setBase()
         })
     }
-        
-    fileprivate func checkMothership()
-    {
-        let yPos = (scoreBox?.center.y)! + 50
-        if motherShip == nil {
-            // random add a new mothership
-            if Int.random(in: 0...300) == 1 {
-                motherShip = MotherShip(pos: CGPoint(x: self.view.frame.width + 10, y: yPos), height: 30, width: 45)
-                self.view.addSubview(motherShip!.spriteView!)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    self.motherSound()
-                }
-                motherShip?.animate()
-            }
-        } else {
-            let x = (motherShip?.position.x)!
-            if x < -20 {
-                motherShip?.spriteView?.removeFromSuperview()
-                motherShip = nil
-            } else {
-                motherShip?.position = CGPoint(x: x - 1, y: yPos)
-            }
-        }
-    }
-        
+    
+    
+    
     fileprivate func moveBase() {
         if let base = base {
             let x = base.position.x
@@ -452,6 +405,7 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
                     bullet.position = CGPoint(x: pos.x, y: pos.y - 8)
                     for inv in invaders {
                         if inv.checkHit(pos: spriteView.center) == true {
+                            inv.startAnimatingNow()
                             self.soundFX.hitSound()
                             spriteView.removeFromSuperview()
                             model.bulletFired = false
@@ -461,21 +415,6 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
                     }
                 }
                 
-                for s in silos {
-                    if (s.checkHit(pos:bullet.position)) {
-                        spriteView.removeFromSuperview()
-                        model.bulletFired = false
-                    }
-                }
-                
-                if motherShip != nil {
-                    if motherShip!.checkHit(pos:spriteView.center) == true {
-                        soundFX.hitSound()
-                        spriteView.removeFromSuperview()
-                        model.bulletFired = false
-                        model.score += 100
-                    }
-                }
             }
         }
     }
@@ -511,11 +450,7 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
                     }
                 }
             }
-            for s in silos {
-                if (s.checkHit(pos:bomb.position)) {
-                    bomb.isDying = true
-                }
-            }
+            
         }
     }
     
@@ -541,51 +476,85 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
     fileprivate func checkInvaders() {
         for inv in invaders {
             if inv.isDead {continue}
-            if Int.random(in: 0...model.bombRandomiser) == 1 && model.gameState == .playing {
-                dropBomb(pos: inv.position)
-                inv.rotateMe()
+            //if Int.random(in: 0...model.bombRandomiser) == 1 && model.gameState == .playing {
+            if Int.random(in: 0...10000) == 1 && model.gameState == .playing {
+                diveBombMe(inv: inv)
+                //dropBomb(pos: inv.position)
+                //inv.rotateMe()
             }
             // use the amount of dead invaders to increase the speed of the remaining
             // so the game gets harder.
             
             if model.invaderXSpeed > 0 {
-                if inv.position.x > viewWidth - 10 {
-                    model.invaderXSpeed = -2 - (model.deadCount / 6)
-                    model.invaderYSpeed = 5 + (model.deadCount / 6)
+                if inv.position.x > viewWidth - 10 && !inv.isBombing {
+                    model.invaderXSpeed = -1
+                    //model.invaderXSpeed = -2 - (model.deadCount / 6)
+                    //model.invaderYSpeed = 5 + (model.deadCount / 6)
                     break
                 }
             } else {
-                if inv.position.x < 10 {
-                    model.invaderXSpeed = 2 + (model.deadCount / 6)
-                    model.invaderYSpeed = 5 + (model.deadCount / 6)
+                if inv.position.x < 10 && !inv.isBombing {
+                    model.invaderXSpeed = 1
+                    //model.invaderYSpeed = 5 + (model.deadCount / 6)
                     break
                 }
             }
             if model.gameState != .ending {
                 if let b = base, let i = inv.spriteView {
-                    if i.frame.minY > baseLineY - 30 {
-                        model.gameState = .ending
-                        removeWonInvaders()
-                        break
-                    }
-                    if b.checkHit(pos: (i.frame)) {
-                        model.gameState = .ending
-                        removeWonInvaders()
-                        self.soundFX.baseHitSound()
-                        break
-                    }
+//                    if i.frame.minY > baseLineY - 30 {
+//                        model.gameState = .ending
+//                        removeWonInvaders()
+//                        break
+//                    }
+//                    if b.checkHit(pos: (i.frame)) {
+//                        model.gameState = .ending
+//                        removeWonInvaders()
+//                        self.soundFX.baseHitSound()
+//                        break
+//                    }
                 }
             }
-            for s in silos {
-                if let isv = inv.spriteView {
-                    let _ = s.checkHit(pos: isv.frame)
-                 }
-            }
+            
         }
     }
     
     func moveInvaders() {
-        let _ = invaders.filter{ !$0.isDead }.map{ $0.move(x: model.invaderXSpeed, y: model.invaderYSpeed)}
+        let _ = invaders.filter{ !$0.isDead || !$0.isBombing }.map{ $0.move(x: model.invaderXSpeed, y: model.invaderYSpeed)}
+        let _ = invaders.filter{ $0.isBombing }.map{
+             
+            $0.returnPosition.x = $0.returnPosition.x + CGFloat(model.invaderXSpeed)
+            $0.returnPosition.y = $0.returnPosition.y + CGFloat(model.invaderYSpeed)
+
+            if $0.rotatePoint > $0.bombingOffsets.count - 2 {
+                if $0.position.y > self.viewHeight {
+                     $0.isBombing = false
+                    $0.position = CGPoint(x: self.viewWidth / 2, y: 10)
+                    let inv = $0
+                    UIView.animate(withDuration: 2.0, delay: 0.0, options: [], animations: {
+                        inv.startAnimating()
+                        inv.rotateMeTo(angle: 0.0,duration:0.5)
+                        inv.position = inv.returnPosition
+                    }, completion: { (finished: Bool) in
+                        
+                    })
+                } else {
+
+                $0.move(x: $0.diveX, y: $0.diveY)
+                }
+            } else {
+                if $0.rotateRight {
+                $0.position.x = $0.originalPosition.x + $0.bombingOffsets[$0.rotatePoint].x
+                $0.position.y = $0.originalPosition.y + $0.bombingOffsets[$0.rotatePoint].y
+                } else {
+                    $0.position.x = $0.originalPosition.x - $0.bombingOffsets[$0.rotatePoint].x
+                    $0.position.y = $0.originalPosition.y - $0.bombingOffsets[$0.rotatePoint].y
+
+                }
+            //$0.move(x: Int($0.bombingOffsets[$0.rotatePoint].x), y: Int($0.bombingOffsets[$0.rotatePoint].y))
+            $0.rotatePoint += 1
+            }
+            
+        }
         if model.invaderYSpeed > 0 { model.invaderYSpeed = 0}
     }
     
@@ -594,14 +563,91 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
         guard model.gameState == .playing else {
             return
         }
-        let bomb = Bomb(pos: pos, height: 24, width: 8)
+        let bomb = Bomb(pos: pos, height: 18, width: 6)
         bomb.position = pos
         self.view.addSubview(bomb.spriteView!)
         bombs.append(bomb)
         bomb.startAnimating()
     }
     
+    func diveBombMe(inv:Invader){
+        guard !inv.isBombing else {
+            return
+        }
+        inv.isBombing = true
+        inv.rotatePoint = 0
+        inv.originalPosition = inv.position
+        inv.returnPosition = inv.position
+        inv.stopAnimating = true
+        if inv.position.x >= (viewWidth / 2) { // dive left
+            inv.bombingOffsets = getLeftCirclePoints(centerPoint:CGPoint(x: 0 - ((inv.spriteView?.frame.height)!), y: 0 + ((inv.spriteView?.frame.width)!)), radius: 40.0, n: loopPoints)
+            inv.diveY = 4
+            inv.diveX = -3
+            inv.rotateRight = false
+            inv.rotateMeTo(angle: 180.0,duration:0.5)
+            print("Left \(inv.position) start \(inv.bombingOffsets[0])")
+
+        } else { // dive right
+            //inv.bombingOffsets = getLeftCirclePoints(centerPoint:CGPoint(x: inv.position.x - ((inv.spriteView?.frame.width)! / 2), y: inv.position.y), radius: 40.0, n: loopPoints)
+            inv.bombingOffsets = getRightCirclePoints(centerPoint:CGPoint(x: 0 - ((inv.spriteView?.frame.height)!), y: 0 + ((inv.spriteView?.frame.width)!)), radius: 40.0, n: loopPoints)
+            inv.rotateRight = true
+            inv.diveY = 4
+             inv.diveX = 3
+            inv.rotateMeTo(angle: 179.0,duration:0.5)
+           print("Right \(inv.position) start \(inv.bombingOffsets[0])")
+        }
+    }
     
+//    func createCurvePath(initialPos:CGPoint) -> UIBezierPath {
+//        let path = UIBezierPath()
+//        path.move(to: CGPoint(x: initialPos.x, y: initialPos.y))
+//        path.addQuadCurve(to: CGPoint(x: initialPos.x - 100, y: initialPos.y ), controlPoint: CGPoint(x: initialPos.x - 45, y: initialPos.y - 45) )
+//        return path
+//    }
+//
+//    func quadBezier(pos: Double, start: Double, con: Double, end: Double) -> Double {
+//        let t_ = (1.0 - pos)
+//        let tt_ = t_ * t_
+//        let tt = pos * pos
+//
+//        return Double(start * tt_) + Double(2.0 * con * t_ * pos) + Double(end * tt)
+//    }
+    
+    func getRightCirclePoints(centerPoint point: CGPoint, radius: CGFloat, n: Int)->[CGPoint] {
+        let result: [CGPoint] = stride(from: 0.0, to: 360.0, by: Double(360 / n)).map {
+            let bearing = CGFloat($0) * .pi / 180
+            let x = point.x + radius * cos(bearing)
+            let y = point.y + radius * sin(bearing)
+            return CGPoint(x: x, y: y)
+        }
+        let a = result
+//        let start = 0
+//        let end = ((n / 4) * 3) - (n / 8)
+        let start = n / 4
+        let end = ((n / 4) * 3) + (n / 8)
+        print("Right start \(start) end \(end)")
+
+        return Array(a[start ..< end]).reversed()
+        //return Array(a[(n/2) ..< n])
+    }
+ 
+    func getLeftCirclePoints(centerPoint point: CGPoint, radius: CGFloat, n: Int)->[CGPoint] {
+        let result: [CGPoint] = stride(from: 0.0, to: 360.0, by: Double(360 / n)).map {
+            let bearing = CGFloat($0) * .pi / 180
+            let x = point.x + radius * cos(bearing)
+            let y = point.y + radius * sin(bearing)
+            return CGPoint(x: x, y: y)
+        }
+        let a = result
+       // print(a)
+        let start = (n / 8)
+        let end = n - (n / 4)
+        print("Left start \(start) end \(end)")
+//        let a1 = Array(a[start ..< end].reversed())
+//        let a2 = Array(a[0 ..< n / 2].reversed())
+        return Array(a[start ..< end])
+       // return Array(a[(n/2) ..< n])
+    }
     //Game loop
     // refreshDisplay is called from the runloop and should be called every screen refresh cycle
     
@@ -626,14 +672,12 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
             checkBombs()
             checkInvaders()
             moveInvaders()
-            checkMothership()
             break
         case .ending:
             checkBullets()
             checkBombs()
             checkInvaders()
             //moveInvaders()
-            checkMothership()
             break
         case .playing:
             moveBase()
@@ -641,7 +685,6 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
             checkBullets()
             checkInvaders()
             checkBombs()
-            checkMothership()
             break
         case .gameOver:
             //highScore?.newHighScore(newScore: model.score)
@@ -668,9 +711,9 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
         guard model.gameState == .hiScore else {
             return
         }
-       // if let hiscore = highScore {
-            highScore.charDown()
-       // }
+        // if let hiscore = highScore {
+        highScore.charDown()
+        // }
     }
     
     @objc func rightTapped(gesture:UIGestureRecognizer) {
@@ -678,7 +721,7 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
             return
         }
         //if let hiscore = highScore {
-            highScore.charUp()
+        highScore.charUp()
         //}
     }
     
@@ -730,7 +773,7 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
             startGame()
         } else if model.gameState != .ending && model.gameState != .dieing {
             if let bsv = base?.spriteView {
-                bullet = Bullet(pos: bsv.center, height: 24, width: 8)
+                bullet = Bullet(pos: bsv.center, height: 18, width: 6)
                 bullet?.position = bsv.center
                 self.view.addSubview(bullet!.spriteView!)
                 model.bulletFired = true
@@ -742,9 +785,9 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
-
     
-
+    
+    
     
 }
 

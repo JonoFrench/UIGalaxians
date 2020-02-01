@@ -61,7 +61,7 @@ final class GalaxiansModel {
     var baseSpeed: CGFloat = 2
     var leftMove: CGFloat = 0
     var rightMove: CGFloat = 0
-    var invaderXSpeed:Int = 2
+    var invaderXSpeed:Int = 1
     var invaderYSpeed:Int = 0
     var bombSpeed:Int = 4
     var numInvaders:Int = 0

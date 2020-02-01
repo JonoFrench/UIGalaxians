@@ -127,27 +127,7 @@ extension GalaxiansViewController {
         livesBox?.addSubview(livesView!)
     }
     
-    func setStars() {
-        let w = Int(self.view.frame.width)
-        let h = Int((baseLine?.frame.minY)!)
-        for _ in 1...500 {
-            let x = Int.random(in: 0...w)
-            let y = Int.random(in: 0...h)
-            let star = UIView(frame: CGRect(x: x, y: y, width: 1, height: 1))
-            star.backgroundColor = .white
-            self.view.addSubview(star)
-        }
-    }
-    
-    func setSilos() {
-        let sy = baseLineY - siloBaseLine
-        let sx = self.view.frame.width / 6
-        for i in 1...3 {
-            let s = Silo(pos: CGPoint(x: sx * CGFloat(i*2) - (sx) - 40, y: sy), height: siloHeight, width: siloWidth)
-            self.view.addSubview(s.spriteView!)
-            silos.append(s)
-        }
-    }
+ 
     
     func setBase() {
         if let base = base {
@@ -155,7 +135,7 @@ extension GalaxiansViewController {
         }
         model.leftMove = 0
         model.rightMove = 0
-        base = Base(pos: CGPoint(x: 150, y: baseLineY), height: 30, width: 45)
+        base = Base(pos: CGPoint(x: 150, y: baseLineY), height: 40, width: 30)
         if let base = base {
             base.position = CGPoint(x: self.view.frame.width / 2, y: self.view.frame.height)
             base.spriteView?.alpha = 0
@@ -180,12 +160,85 @@ extension GalaxiansViewController {
         var invaderType = 0
 
         var delay:Double = 0.0
-        let step = viewWidth / 6
-        let levelPos = model.level < 5 ? model.level * invaderLevelIncrease : 100
-        for i in stride(from: step, to: step * 6, by: step) {
+        var step = viewWidth / 11
+        //let levelPos = model.level < 5 ? model.level * invaderLevelIncrease : 100
+        let levelPos = 0
+        for i in stride(from: step * 5, to: step * 7, by: step) {
             invaderType = 0
-            for z in stride(from: invaderStartY + levelPos, to: invaderStartY + 300 + levelPos, by: 60){
-                let invader:Invader = Invader(pos: CGPoint(x: viewWidth / 2, y: 20), height: invaderSize, width: invaderSize,invaderType: invaderType)
+            let invader:Invader = Invader(pos: CGPoint(x: viewWidth / 2, y: 20), height: invaderHeight, width: invaderWidth,invaderType: 3)
+            model.numInvaders += 1
+            invader.spriteView?.alpha = 0
+            invader.spriteView?.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+            self.view.addSubview(invader.spriteView!)
+            invaders.append(invader)
+            invader.animate()
+            UIView.animate(withDuration: 1.0, delay: delay, options: [], animations: {
+                invader.spriteView?.transform = CGAffineTransform(scaleX: 1, y: 1)
+                invader.spriteView?.alpha = 1
+                invader.spriteView?.center = CGPoint(x: i, y: CGFloat(self.invaderStartY))
+                invader.position = CGPoint(x: i, y: CGFloat(self.invaderStartY))
+            }, completion: { (finished: Bool) in
+                invader.originalPosition = invader.position
+            })
+            delay += 0.020
+            invaderType += 1
+
+        }
+        invaderStartY += 50
+        
+        for i in stride(from: step * 3, to: step * 9, by: step) {
+            invaderType = 0
+            let invader:Invader = Invader(pos: CGPoint(x: viewWidth / 2, y: 20), height: invaderHeight, width: invaderWidth,invaderType: 2)
+            model.numInvaders += 1
+            invader.spriteView?.alpha = 0
+            invader.spriteView?.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+            self.view.addSubview(invader.spriteView!)
+            invaders.append(invader)
+            invader.animate()
+            UIView.animate(withDuration: 1.0, delay: delay, options: [], animations: {
+                invader.spriteView?.transform = CGAffineTransform(scaleX: 1, y: 1)
+                invader.spriteView?.alpha = 1
+                invader.spriteView?.center = CGPoint(x: i, y: CGFloat(self.invaderStartY))
+                invader.position = CGPoint(x: i, y: CGFloat(self.invaderStartY))
+            }, completion: { (finished: Bool) in
+                invader.originalPosition = invader.position
+
+            })
+            delay += 0.020
+            invaderType += 1
+
+        }
+        invaderStartY += 50
+        
+        for i in stride(from: step * 2, to: step * 10, by: step) {
+            invaderType = 0
+            let invader:Invader = Invader(pos: CGPoint(x: viewWidth / 2, y: 20), height: invaderHeight, width: invaderWidth,invaderType: 1)
+            model.numInvaders += 1
+            invader.spriteView?.alpha = 0
+            invader.spriteView?.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+            self.view.addSubview(invader.spriteView!)
+            invaders.append(invader)
+            invader.animate()
+            UIView.animate(withDuration: 1.0, delay: delay, options: [], animations: {
+                invader.spriteView?.transform = CGAffineTransform(scaleX: 1, y: 1)
+                invader.spriteView?.alpha = 1
+                invader.spriteView?.center = CGPoint(x: i, y: CGFloat(self.invaderStartY))
+                invader.position = CGPoint(x: i, y: CGFloat(self.invaderStartY))
+            }, completion: { (finished: Bool) in
+ invader.originalPosition = invader.position
+
+            })
+            delay += 0.020
+            invaderType += 1
+
+        }
+        invaderStartY += 50
+        
+        step = viewWidth / 11
+        for i in stride(from: step, to: step * 11, by: step) {
+            invaderType = 0
+            for z in stride(from: invaderStartY + levelPos, to: invaderStartY + 150 + levelPos, by: 50){
+                let invader:Invader = Invader(pos: CGPoint(x: viewWidth / 2, y: 20), height: invaderHeight, width: invaderWidth,invaderType: 0)
                 model.numInvaders += 1
                 invader.spriteView?.alpha = 0
                 invader.spriteView?.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
@@ -198,6 +251,8 @@ extension GalaxiansViewController {
                     invader.spriteView?.center = CGPoint(x: i, y: CGFloat(z))
                     invader.position = CGPoint(x: i, y: CGFloat(z))
                 }, completion: { (finished: Bool) in
+                    invader.originalPosition = invader.position
+
                 })
                 delay += 0.020
                 invaderType += 1

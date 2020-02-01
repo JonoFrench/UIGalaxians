@@ -12,16 +12,16 @@ extension GalaxiansViewController {
     
     //Sounds
     
-    func motherSound(){
-        self.soundFX.motherSound()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-            if self.motherShip != nil {
-                if !(self.motherShip?.isDead)! {
-                    self.motherSound()
-                }
-            }
-        }
-    }
+//    func motherSound(){
+//        self.soundFX.motherSound()
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+//            if self.motherShip != nil {
+//                if !(self.motherShip?.isDead)! {
+//                    self.motherSound()
+//                }
+//            }
+//        }
+//    }
 
     func invaderSound() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
