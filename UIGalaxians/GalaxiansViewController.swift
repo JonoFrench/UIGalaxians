@@ -115,14 +115,14 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
             baseLineY = ((baseLine?.center.y)!) - 15
             viewWidth = self.view.frame.width
             viewHeight = self.view.frame.height
-            leftCirclePoints = getLeftCirclePoints(centerPoint:CGPoint(x: 0 , y: 0 ), radius: 40.0, n: loopPoints)
-            rightCirclePoints = getRightCirclePoints(centerPoint:CGPoint(x: 0 , y: 0 ), radius: 40.0, n: loopPoints)
+            leftCirclePoints = getLeftCirclePoints(centerPoint:CGPoint(x: (-invaderWidth * 2) , y: -invaderHeight * 2 ), radius: 40.0, n: loopPoints)
+            rightCirclePoints = getRightCirclePoints(centerPoint:CGPoint(x: invaderWidth , y: -invaderHeight ), radius: 40.0, n: loopPoints)
             
             setScore()
             setLevel()
             setLives()
             setControls()
-            //setStars()
+
             setIntro()
         }
     }
@@ -199,7 +199,7 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
         gameoverView = UIView(frame: CGRect(x: 0, y: viewHeight / 2, width: (coverView?.frame.width)!, height: 40))
         if let gameoverView = gameoverView {
             let gov = UIView(frame: CGRect(x: 0, y: 0, width: gameoverView.frame.width, height: gameoverView.frame.height))
-            gov.addSubview(alpha.get(string: "GAME OVER", size: (gov.frame.size), fcol: .red, bcol:.yellow ))
+            gov.addSubview(alpha.get(string: "GAME OVER", size: (gov.frame.size), fcol: .orange, bcol:.purple ))
             gov.backgroundColor = .clear
             gameoverView.alpha = 0
             gameoverView.addSubview(gov)
@@ -365,7 +365,7 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
             stringView.alpha = 0.0
         }, completion: { (finished: Bool) in
             stringView.removeFromSuperview()
-         })
+        })
         
     }
     
@@ -381,8 +381,8 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
             bomb.move(x: 0, y: model.bombSpeed)
             if model.gameState == .playing {
                 if let b = base {
-                    if 1 == 2 {
-                        //                        if b.checkHit(pos:bomb.position) {
+                    //                    if 1 == 2 {
+                    if b.checkHit(pos:bomb.position) {
                         bomb.isDying = true
                         model.gameState = .dieing
                         self.soundFX.baseHitSound()
@@ -410,7 +410,9 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
         for inv in invaders {
             // rotate the odd one
             if Int.random(in: 0...1000) == 1 {
-                inv.rotateMe()
+                //inv.rotateMe()
+//                diveBombMe(inv: inv)
+//                view.sendSubviewToBack(inv.spriteView!)
             }
             
             if model.invaderXSpeed > 0 {
@@ -428,13 +430,10 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
     fileprivate func checkInvaders() {
         for inv in invaders {
             if inv.isDead {continue}
-            //if Int.random(in: 0...model.bombRandomiser) == 1 && model.gameState == .playing {
-            if Int.random(in: 0...5000) == 1 && model.gameState == .playing {
+            if Int.random(in: 0...model.bombRandomiser) == 1 && model.gameState == .playing {
                 diveBombMe(inv: inv)
-                //dropBomb(pos: inv.position)
-                //inv.rotateMe()
             }
-            if inv.isBombing && Int.random(in: 0...50) == 1 {
+            if inv.isBombing && Int.random(in: 0...100) == 1 {
                 dropBomb(pos: inv.position)
             }
             // use the amount of dead invaders to increase the speed of the remaining
@@ -454,30 +453,36 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
                     break
                 }
             }
-            if inv.isBombing {
-                if inv.position.x > viewWidth  {
-                    inv.diveX.negate()
-                } else {
-                    if inv.position.x < 0 {
-                        inv.diveX.negate()
+//            if inv.isBombing && !inv.isSpinning {
+//                if ((inv.position.x > viewWidth ) || (inv.position.x < 0 ))
+//                {
+//                    inv.diveX.negate()
+//                }
+//            }
+            
+            if model.gameState != .ending && model.gameState != .dieing {
+                //            if model.gameState == .playing {
+                if let b = base, let i = inv.spriteView {
+                    if b.checkHit(pos: (i.frame)) {
+                        model.gameState = .dieing
+                        self.soundFX.baseHitSound()
+                        self.model.lives -= 1
+                        inv.startAnimatingNow()
+                        inv.isDying = true
+                        self.model.deadCount += 1
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                            //self.model.lives -= 1
+                            if self.model.lives == 0 {
+                                self.model.gameState = .ending
+                                self.removeWonInvaders()
+                                
+                            } else {
+                                self.setBase()
+                            }
+                        }
+                        break
                     }
                 }
-            }
-            
-            if model.gameState != .ending {
-                //  if let b = base, let i = inv.spriteView {
-                //                    if i.frame.minY > baseLineY - 30 {
-                //                        model.gameState = .ending
-                //                        removeWonInvaders()
-                //                        break
-                //                    }
-                //                    if b.checkHit(pos: (i.frame)) {
-                //                        model.gameState = .ending
-                //                        removeWonInvaders()
-                //                        self.soundFX.baseHitSound()
-                //                        break
-                //                    }
-                //    }
             }
             
         }
@@ -500,9 +505,8 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
                         inv.isBombing = false
                         inv.isConvoy = false
                         inv.convoyInvaders.removeAll()
-                        
                         inv.position = CGPoint(x: self.viewWidth / 2, y: 10)
-                        // let inv = $0
+                        
                         UIView.animate(withDuration: 2.0, delay: 0.0, options: [], animations: {
                             inv.startAnimating()
                             inv.rotateMeTo(angle: 0.0,duration:0.5)
@@ -511,13 +515,18 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
                             
                         })
                     } else {
-                        
+                        if ((inv.position.x > viewWidth ) || (inv.position.x < 0 ) && inv.position.y > inv.originalPosition.y + 100 )
+                        {
+                            inv.diveX.negate()
+                        }
+ 
+                        inv.isSpinning = false
                         inv.move(x: inv.diveX, y: inv.diveY)
                     }
                 } else {
                     if inv.rotateRight {
-                        inv.position.x = inv.originalPosition.x + rightCirclePoints[inv.rotatePoint].x - CGFloat(invaderWidth)
-                        inv.position.y = inv.originalPosition.y + rightCirclePoints[inv.rotatePoint].y - CGFloat(invaderHeight)
+                        inv.position.x = inv.originalPosition.x - rightCirclePoints[inv.rotatePoint].x
+                        inv.position.y = inv.originalPosition.y + rightCirclePoints[inv.rotatePoint].y
                     } else {
                         inv.position.x = inv.originalPosition.x - leftCirclePoints[inv.rotatePoint].x - CGFloat(invaderWidth)
                         inv.position.y = inv.originalPosition.y - leftCirclePoints[inv.rotatePoint].y - CGFloat(invaderHeight)
@@ -555,11 +564,11 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
             var rx = 0
             var ry = 0
             if Int.random(in: 1...2) == 1 && inv.invaderType != 3  { //if its going to be a convoy then less shallo dive
-                rx = -3
-                ry = 4
-            } else {
-                rx = -4
+                rx = -2
                 ry = 3
+            } else {
+                rx = -3
+                ry = 2
             }
             diveMe(inv:inv,x:rx,y:ry,rRight:false)
             if inv.invaderType == 3 { //Convoy
@@ -579,11 +588,11 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
             var rx = 0
             var ry = 0
             if Int.random(in: 1...2) == 1 && inv.invaderType != 3 {
-                rx = 3
-                ry = 4
-            } else {
-                rx = 4
+                rx = 2
                 ry = 3
+            } else {
+                rx = 3
+                ry = 2
             }
             diveMe(inv:inv,x:rx,y:ry,rRight:true)
             if inv.invaderType == 3 {
@@ -602,6 +611,7 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
     func diveMe(inv:Invader,x:Int,y:Int,rRight:Bool) {
         self.view.bringSubviewToFront(inv.spriteView!)
         inv.isBombing = true
+        inv.isSpinning = true
         inv.rotatePoint = 0
         inv.originalPosition = inv.position
         inv.returnPosition = inv.position
@@ -614,20 +624,6 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
         
     }
     
-    //    func createCurvePath(initialPos:CGPoint) -> UIBezierPath {
-    //        let path = UIBezierPath()
-    //        path.move(to: CGPoint(x: initialPos.x, y: initialPos.y))
-    //        path.addQuadCurve(to: CGPoint(x: initialPos.x - 100, y: initialPos.y ), controlPoint: CGPoint(x: initialPos.x - 45, y: initialPos.y - 45) )
-    //        return path
-    //    }
-    //
-    //    func quadBezier(pos: Double, start: Double, con: Double, end: Double) -> Double {
-    //        let t_ = (1.0 - pos)
-    //        let tt_ = t_ * t_
-    //        let tt = pos * pos
-    //
-    //        return Double(start * tt_) + Double(2.0 * con * t_ * pos) + Double(end * tt)
-    //    }
     
     func getRightCirclePoints(centerPoint point: CGPoint, radius: CGFloat, n: Int)->[CGPoint] {
         let result: [CGPoint] = stride(from: 0.0, to: 360.0, by: Double(360 / n)).map {
@@ -641,12 +637,14 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
         let end1 = (n / 8)
         //        let start = n / 4
         //        let end = ((n / 4) * 3) + (n / 8)
-        let start2 = ((n / 4) * 2) //+ (n / 8)
+        let start2 = (n / 2)
         let end2 = n
-        print("Right start \(start1) end \(end1)")
+        print(" \(n)Right start1 \(start1) end \(end1)")
+        print("Right start2 \(start2) end \(end2)")
         let a1 = Array(a[start1 ..< end1])
         let a2 = Array(a[start2 ..< end2])
-        return Array(a1.reversed()) + Array(a2.reversed())
+        return Array(a2) + Array(a1)
+//        return Array(Array(a1) + Array(a2)).reversed()
         //return Array(a[(n/2) ..< n])
     }
     
@@ -687,6 +685,7 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
             }
             break
         case .dieing:
+            moveBase()
             checkBullets()
             checkBombs()
             checkInvaders()
@@ -716,7 +715,7 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
     //Controls
     
     @objc func leftPressed(gesture:UILongPressGestureRecognizer) {
-        guard model.gameState == .playing else {
+        guard model.gameState == .playing || model.gameState == .dieing else {
             return
         }
         if gesture.state == .began {
@@ -730,23 +729,19 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
         guard model.gameState == .hiScore else {
             return
         }
-        // if let hiscore = highScore {
         highScore.charDown()
-        // }
     }
     
     @objc func rightTapped(gesture:UIGestureRecognizer) {
         guard model.gameState == .hiScore else {
             return
         }
-        //if let hiscore = highScore {
         highScore.charUp()
-        //}
     }
     
     
     @objc func rightPressed(gesture:UILongPressGestureRecognizer) {
-        guard model.gameState == .playing else {
+        guard model.gameState == .playing || model.gameState == .dieing else {
             return
         }
         if gesture.state == .began {

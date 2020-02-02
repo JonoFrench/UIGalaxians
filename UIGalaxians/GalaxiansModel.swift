@@ -25,7 +25,7 @@ final class GalaxiansModel {
     var layoutSet: Bool = false
     var bulletFired: Bool = false
     var gameState:GameState = .starting
-    var bombRandomiser:Int = 1000
+    var bombRandomiser:Int = 8000
     
     var lives:Int = 3 {
         didSet{
@@ -34,9 +34,6 @@ final class GalaxiansModel {
     }
     var level:Int = 1 {
         didSet{
-//            guard gameState != .loading else {
-//                return
-//            }
             viewController?.setLevel()
         }
     }
@@ -45,9 +42,8 @@ final class GalaxiansModel {
             guard gameState != .loading else {
                 return
             }
-            bombRandomiser -= 10
-            if bombRandomiser < 100 { bombRandomiser = 100 }
-            
+            bombRandomiser -= 200
+            if bombRandomiser < 1000 { bombRandomiser = 1000 }
             if deadCount == numInvaders {
                 nextLevel()
             }
@@ -77,7 +73,7 @@ final class GalaxiansModel {
         self.score = 0
         self.level = 1
         self.numInvaders = 0
-        self.bombRandomiser = 1000
+        self.bombRandomiser = 8000
     }
     // set up model for next level
     // after level 5 it stays the same.
@@ -91,7 +87,7 @@ final class GalaxiansModel {
         self.score += 1000
         self.level += 1
         self.numInvaders = 0
-        self.bombRandomiser = level < 5 ? 1000 - (level * 100) : 500
+        self.bombRandomiser = level < 5 ? 8000 - (level * 500) : 4000
     }
     
 }

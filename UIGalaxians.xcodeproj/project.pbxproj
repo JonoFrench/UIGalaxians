@@ -91,6 +91,7 @@
 		34922E0B23E5C3AC0037AD1D /* Galaxian_Tone.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Galaxian_Tone.wav; sourceTree = "<group>"; };
 		34922E0C23E5C3AC0037AD1D /* Galaxian_Start.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Galaxian_Start.wav; sourceTree = "<group>"; };
 		34922E1423E5D9980037AD1D /* Base.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Base.swift; sourceTree = "<group>"; };
+		34922E1723E5FDC40037AD1D /* UIGalaxians.profdata */ = {isa = PBXFileReference; lastKnownFileType = file; path = UIGalaxians.profdata; sourceTree = "<group>"; };
 		34BC994523D760E30024A1BA /* Sprite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sprite.swift; sourceTree = "<group>"; };
 		34BC997A23D85FFF0024A1BA /* UIHighScores.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = UIHighScores.xcodeproj; path = ../UIHighScores/UIHighScores.xcodeproj; sourceTree = "<group>"; };
 		34D7225A221ADEF200A46057 /* Retro Galaxians.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Retro Galaxians.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -139,6 +140,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		34922E1623E5FDC40037AD1D /* OptimizationProfiles */ = {
+			isa = PBXGroup;
+			children = (
+				34922E1723E5FDC40037AD1D /* UIGalaxians.profdata */,
+			);
+			path = OptimizationProfiles;
+			sourceTree = "<group>";
+		};
 		34BC994723D7650A0024A1BA /* Sprites */ = {
 			isa = PBXGroup;
 			children = (
@@ -160,12 +169,13 @@
 		34D72251221ADEF200A46057 = {
 			isa = PBXGroup;
 			children = (
-				34FC7B7E23E09EF7007E0E3A /* UISprites.xcodeproj */,
 				34FC7B8423E09F07007E0E3A /* UIAlphaNumeric.xcodeproj */,
+				34FC7B7E23E09EF7007E0E3A /* UISprites.xcodeproj */,
 				34BC997A23D85FFF0024A1BA /* UIHighScores.xcodeproj */,
 				34D7225C221ADEF200A46057 /* UIGalaxians */,
 				34D7225B221ADEF200A46057 /* Products */,
 				3403BCA623D756A400C29047 /* Frameworks */,
+				34922E1623E5FDC40037AD1D /* OptimizationProfiles */,
 			);
 			sourceTree = "<group>";
 		};
@@ -427,6 +437,10 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -489,6 +503,10 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -512,6 +530,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_USE_OPTIMIZATION_PROFILE = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 9GZ8FVR7LN;
@@ -538,8 +557,9 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CLANG_USE_OPTIMIZATION_PROFILE = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 9GZ8FVR7LN;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -555,7 +575,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jaypeeff.retrogalaxians;
 				PRODUCT_NAME = "Retro Galaxians";
-				PROVISIONING_PROFILE_SPECIFIER = com.jaypeeff.retrogalaxians;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

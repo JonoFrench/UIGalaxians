@@ -91,10 +91,14 @@ extension GalaxiansViewController {
     
     
     func setScore() {
+        if let sb = scoreBox {
+            sb.clearSubviews()
+            //sb.removeFromSuperview()
         let scoreString = String(format: "%06d", model.score)
         let alpha:UIAlphaNumeric = UIAlphaNumeric()
         scoreView = alpha.getStringView(string: scoreString, size: (scoreBox?.frame.size)!, fcol: .white, bcol: .blue)
-        scoreBox?.addSubview(scoreView.charView!)
+        sb.addSubview(scoreView.charView!)
+        }
         
     }
     
@@ -107,25 +111,34 @@ extension GalaxiansViewController {
     }
     
     func setLevel() {
-        if levelView != nil {
-            levelView?.removeFromSuperview()
-        }
+//        if levelView != nil {
+//            levelView?.removeFromSuperview()
+//        }
+        if let lb = levelBox {
+            lb.clearSubviews()
+            //lb.removeFromSuperview()
         let levelString = "LEVEL\(model.level)"
         let alpha:UIAlphaNumeric = UIAlphaNumeric()
         let lv = alpha.getStringView(string: levelString, size: (levelBox?.frame.size)!, fcol: .white, bcol: .blue)
         levelView = lv.charView
-        levelBox?.addSubview(levelView!)
+        lb.addSubview(levelView!)
+        }
     }
     
     func setLives() {
-        if livesView != nil {
-            livesView?.removeFromSuperview()
-        }
+//        if livesView != nil {
+//            livesView?.removeFromSuperview()
+//        }
+        if let lv = livesBox {
+            
+            lv.clearSubviews()
+            //lv.removeFromSuperview()
         let levelString = "Lives\(model.lives)"
         let alpha:UIAlphaNumeric = UIAlphaNumeric()
         let lv = alpha.getStringView(string: levelString, size: (livesBox?.frame.size)!, fcol: .white, bcol: .blue)
         livesView = lv.charView
         livesBox?.addSubview(livesView!)
+        }
     }
     
  
@@ -149,21 +162,37 @@ extension GalaxiansViewController {
                 base.spriteView?.alpha = 1
                 base.spriteView?.center = CGPoint(x: self.view.frame.width / 2, y: self.baseLineY)
             }, completion: { (finished: Bool) in
-                self.model.gameState = .playing
+                self.flashBase(flashes: 10)
+               // self.model.gameState = .playing
                 base.position = CGPoint(x: self.view.frame.width / 2, y: self.baseLineY)
             })
         }
     }
     
+    func flashBase(flashes:Int){
+        var f = flashes
+        if f == 0 {
+            self.model.gameState = .playing
+            base?.spriteView?.isHidden  = false
+            return
+        } else {
+            base?.spriteView?.isHidden = !(base?.spriteView!.isHidden)!
+            f -= 1
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.flashBase(flashes: f)
+            }
+            
+        }
+    }
     
     func setInvaders() {
         invaders.removeAll()
         var invaderType = 0
-
+        invaderStartY = 140
         var delay:Double = 0.0
         var step = viewWidth / 11
-        //let levelPos = model.level < 5 ? model.level * invaderLevelIncrease : 100
-        let levelPos = 0
+        let levelPos = model.level < 5 ? model.level * invaderLevelIncrease : 140
+        //levelPos = 0
         for i in stride(from: step * 4, to: step * 8, by: step * 3) {
             invaderType = 0
             let invader:Invader = Invader(pos: CGPoint(x: viewWidth / 2, y: 20), height: invaderHeight, width: invaderWidth,invaderType: 3, invaderPoints: 100)
@@ -267,10 +296,27 @@ extension GalaxiansViewController {
     }
     
    func setIntro(){
-        introView = UIView(frame: CGRect(x: 0, y: 0, width: (coverView?.frame.width)!, height: (coverView?.frame.height)!))
-        highScore = UIHighScores.init(xPos: 0, yPos: highScoreYpos, width: (introView?.frame.width)!, height: ((coverView?.frame.height)!) - (highScoreHeight))
+    if let i = introView {
+    for v in i.subviews {
+        v.removeFromSuperview()
+    }
+    }
+    
+    if let c = coverView {
+    for v in c.subviews {
+        v.removeFromSuperview()
+    }
+    }
+    introView = UIView(frame: CGRect(x: 0, y: 0, width: (coverView?.frame.width)!, height: (coverView?.frame.height)!))
+
+    highScore = UIHighScores.init(xPos: 0, yPos: highScoreYpos, width: (introView?.frame.width)!, height: ((coverView?.frame.height)!) - (highScoreHeight))
+
+
     highScore.titleBCol = .darkGray
-    highScore.titleFCol = .lightGray
+    highScore.titleFCol = .cyan
+    highScore.scoreFCol = .blue
+    highScore.scoreBCol = .white
+    highScore.drawScoreView()
         if let introView = introView, let coverView = coverView {
             let w = coverView.frame.width
             let h = coverView.frame.height
@@ -292,12 +338,12 @@ extension GalaxiansViewController {
             invaderAttractStartY = titleY + titleHeight + 5 + Int(subTitle.frame.height) + 120
             print(invaderAttractStartY)
             let subTitle2 = UIView(frame: CGRect(x: 20, y: h - startTextY, width: w - 40, height: startTextHeight))
-            subTitle2.addSubview(alpha.get(string: "TO PLAY", size: (subTitle2.frame.size), fcol: .red, bcol:.yellow ))
+            subTitle2.addSubview(alpha.get(string: "TO PLAY", size: (subTitle2.frame.size), fcol: .orange, bcol:.purple ))
             subTitle2.backgroundColor = .clear
             introView.addSubview(subTitle2)
             
             let subTitle3 = UIView(frame: CGRect(x: 20, y: h - startTextY - startTextHeight - 5, width: w - 40, height: startTextHeight))
-            subTitle3.addSubview(alpha.get(string: "PRESS FIRE", size: (subTitle3.frame.size), fcol: .red, bcol:.yellow ))
+            subTitle3.addSubview(alpha.get(string: "PRESS FIRE", size: (subTitle3.frame.size), fcol: .orange, bcol:.purple ))
             subTitle3.backgroundColor = .clear
             introView.addSubview(subTitle3)
             introView.layoutIfNeeded()
@@ -425,6 +471,7 @@ extension GalaxiansViewController {
                 invader.spriteView?.center = CGPoint(x: self.viewWidth / 2, y: 20)
             }, completion: { (finished: Bool) in
                 invader.spriteView?.removeFromSuperview()
+                invader.spriteView? = UIView()
             })
         }
         
