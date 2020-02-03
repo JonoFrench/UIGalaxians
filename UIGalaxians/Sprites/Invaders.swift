@@ -25,7 +25,8 @@ class Invader: UISprite, Animates {
     var isConvoy:Bool = false
     var convoyInvaders:[Invader]!
     var isSpinning:Bool = false
-    
+    var isArriving:Bool = true
+
     let types = [invaderAnimations1(),invaderAnimations2(),invaderAnimations3(),invaderAnimations4(),invaderAnimations1(),invaderAnimations1()]
     init(pos:CGPoint,height:Int,width:Int,invaderType:Int,invaderPoints:Int) {
         self.invaderType = invaderType
@@ -34,9 +35,7 @@ class Invader: UISprite, Animates {
         super.init(pos: pos, height: height, width: width, animateArray: types[invaderType],frameWith:14,frameHeight:11,frames:2,speed:0.25)
     }
     
-    deinit {
-        print("deinit invader")
-    }
+
 }
 
 let invaderAnimations1 = {

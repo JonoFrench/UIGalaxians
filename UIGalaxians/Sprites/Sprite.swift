@@ -16,9 +16,7 @@ class Bomb: UISprite, Animates {
     init(pos:CGPoint,height:Int,width:Int) {
         super.init(pos: pos, height: height, width: width, animateArray: bombAnimations,frameWith:4,frameHeight:3,frames:2)
     }
-    deinit {
-        print("deinit bomb")
-    }
+
 }
 
 
@@ -29,9 +27,7 @@ class Bullet: UISprite, Animates {
     init(pos:CGPoint,height:Int,width:Int) {
         super.init(pos: pos, height: height, width: width, animateArray: bulletAnimations,frameWith:4,frameHeight:3,frames:2)
     }
-    deinit {
-        print("deinit bullet")
-    }
+
 }
 
 

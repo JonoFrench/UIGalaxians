@@ -42,6 +42,7 @@ final class GalaxiansModel {
             guard gameState != .loading else {
                 return
             }
+            print("Bomb Randomiser \(bombRandomiser)")
             bombRandomiser -= 200
             if bombRandomiser < 1000 { bombRandomiser = 1000 }
             if deadCount == numInvaders {
@@ -61,7 +62,7 @@ final class GalaxiansModel {
     var invaderYSpeed:Int = 0
     var bombSpeed:Int = 4
     var numInvaders:Int = 0
-    
+    var startY:Int = 140
     // reset the game
     func reset() {
         self.gameState = .loading
@@ -74,7 +75,8 @@ final class GalaxiansModel {
         self.level = 1
         self.numInvaders = 0
         self.bombRandomiser = 8000
-    }
+    
+     }
     // set up model for next level
     // after level 5 it stays the same.
     func nextLevel() {

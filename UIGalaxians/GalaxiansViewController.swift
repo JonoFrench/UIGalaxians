@@ -165,7 +165,8 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
             //invaderSize = 35
             introInvaders = 5
             
-            invaderStartY = 60
+            invaderStartY = 100
+            model.startY = 100
             invaderLevelIncrease = 15
             view.setNeedsLayout()
         }
@@ -268,7 +269,7 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
             bul.removeFromSuperview()
         }
         model.bulletFired = false
-        
+        invaderStartY = model.startY
         base?.spriteView?.removeFromSuperview()
         base = nil
     }
@@ -434,7 +435,7 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
     
     fileprivate func checkInvaders() {
         for inv in invaders {
-            if inv.isDead {continue}
+            if inv.isDead || inv.isArriving {continue}
             if Int.random(in: 0...model.bombRandomiser) == 1 && model.gameState == .playing {
                 diveBombMe(inv: inv)
             }
@@ -517,10 +518,11 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
                             inv.rotateMeTo(angle: 0.0,duration:0.5)
                             inv.position = inv.returnPosition
                         }, completion: { (finished: Bool) in
-                            
+                            inv.isArriving = false
+
                         })
                     } else {
-                        if ((inv.position.x > viewWidth ) || (inv.position.x < 0 ) && inv.position.y > inv.originalPosition.y + 100 )
+                        if ((inv.position.x > viewWidth ) || (inv.position.x < 0 )) && inv.position.y > inv.originalPosition.y + 100 
                         {
                             inv.diveX.negate()
                         }
@@ -546,7 +548,7 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
         }
         
         
-        if model.invaderYSpeed > 0 { model.invaderYSpeed = 0}
+        //if model.invaderYSpeed > 0 { model.invaderYSpeed = 0}
     }
     
     
@@ -787,7 +789,7 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
                 }
             }
         }
-        else if model.gameState == .starting || model.gameState == .gameOver {
+        else if model.gameState == .starting  {
             model.gameState = .loading
             self.soundFX.startSound()
             

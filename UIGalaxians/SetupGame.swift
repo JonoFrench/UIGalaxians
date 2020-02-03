@@ -189,11 +189,10 @@ extension GalaxiansViewController {
         invaders = []
         invaders.removeAll()
         var invaderType = 0
-        invaderStartY = 140
         var delay:Double = 0.0
         var step = viewWidth / 11
-        let levelPos = model.level < 5 ? model.level * invaderLevelIncrease : 140
-        //levelPos = 0
+        let levelPos = model.level < 5 ? (model.level - 1) * invaderLevelIncrease : 100
+        invaderStartY += levelPos
         for i in stride(from: step * 4, to: step * 8, by: step * 3) {
             invaderType = 0
             let invader:Invader = Invader(pos: CGPoint(x: viewWidth / 2, y: 20), height: invaderHeight, width: invaderWidth,invaderType: 3, invaderPoints: 100)
@@ -210,6 +209,7 @@ extension GalaxiansViewController {
                 invader.position = CGPoint(x: i, y: CGFloat(self.invaderStartY))
             }, completion: { (finished: Bool) in
                 invader.originalPosition = invader.position
+                invader.isArriving = false
             })
             delay += 0.020
             invaderType += 1
@@ -233,6 +233,7 @@ extension GalaxiansViewController {
                 invader.position = CGPoint(x: i, y: CGFloat(self.invaderStartY))
             }, completion: { (finished: Bool) in
                 invader.originalPosition = invader.position
+                invader.isArriving = false
 
             })
             delay += 0.020
@@ -257,6 +258,7 @@ extension GalaxiansViewController {
                 invader.position = CGPoint(x: i, y: CGFloat(self.invaderStartY))
             }, completion: { (finished: Bool) in
  invader.originalPosition = invader.position
+                invader.isArriving = false
 
             })
             delay += 0.020
@@ -268,7 +270,7 @@ extension GalaxiansViewController {
         step = viewWidth / 9
         for i in stride(from: step, to: step * 9, by: step) {
             invaderType = 0
-            for z in stride(from: invaderStartY + levelPos, to: invaderStartY + 150 + levelPos, by: 50){
+            for z in stride(from: invaderStartY, to: invaderStartY + 150 , by: 40){
                 let invader:Invader = Invader(pos: CGPoint(x: viewWidth / 2, y: 20), height: invaderHeight, width: invaderWidth,invaderType: 0, invaderPoints: 20)
                 model.numInvaders += 1
                 invader.spriteView?.alpha = 0
@@ -283,6 +285,7 @@ extension GalaxiansViewController {
                     invader.position = CGPoint(x: i, y: CGFloat(z))
                 }, completion: { (finished: Bool) in
                     invader.originalPosition = invader.position
+                    invader.isArriving = false
 
                 })
                 delay += 0.020
