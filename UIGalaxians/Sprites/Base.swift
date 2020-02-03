@@ -7,4 +7,7 @@ let baseAnimations =
     init(pos:CGPoint,height:Int,width:Int) {
         super.init(pos: pos, height: height, width: width,animateArray: baseAnimations,frameWith:14,frameHeight:18,frames:2,speed: 0.25)
     }
+    deinit {
+        print("deinit base")
+    }
 }

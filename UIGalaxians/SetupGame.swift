@@ -186,6 +186,7 @@ extension GalaxiansViewController {
     }
     
     func setInvaders() {
+        invaders = []
         invaders.removeAll()
         var invaderType = 0
         invaderStartY = 140
@@ -368,7 +369,7 @@ extension GalaxiansViewController {
                //let levelPos = model.level < 5 ? model.level * invaderLevelIncrease : 100
                for i in stride(from: step * 4, to: step * 8, by: step * 3) {
                    invaderType = 0
-                   let invader:Invader = Invader(pos: CGPoint(x: viewWidth / 2, y: 20), height: invaderHeight, width: invaderWidth,invaderType: 3, invaderPoints: 100)
+                let invader:Invader = Invader(pos: CGPoint(x: viewWidth / 2, y: 20), height: invaderHeight, width: invaderWidth,invaderType: 3, invaderPoints: 100)
                    model.numInvaders += 1
                    invader.spriteView?.alpha = 0
                    invader.spriteView?.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
@@ -472,6 +473,7 @@ extension GalaxiansViewController {
             }, completion: { (finished: Bool) in
                 invader.spriteView?.removeFromSuperview()
                 invader.spriteView? = UIView()
+                invader.stopAnimating = true
             })
         }
         

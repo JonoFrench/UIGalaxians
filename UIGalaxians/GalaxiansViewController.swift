@@ -88,6 +88,7 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
         super.viewDidLoad()
         //Set the model
         model.viewController = self
+        invaders = []
         self.view.backgroundColor = .black
     }
     
@@ -244,14 +245,17 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
     fileprivate func resetGame() {
         setGameOverView()
         for i in invaders {
+            i.stopAnimating = true
             if let isv = i.spriteView {
                 isv.removeFromSuperview()
+                
             }
+            i.convoyInvaders = []
         }
         invaders.removeAll()
         
-        
-        
+        invaders = []
+        print("inv \(invaders.count)")
         for b in bombs {
             if let bsv = b.spriteView {
                 bsv.removeFromSuperview()
@@ -259,6 +263,7 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
         }
         bombs.removeAll()
         
+        bombs = []
         if let bul = bullet?.spriteView {
             bul.removeFromSuperview()
         }
@@ -281,7 +286,7 @@ class GalaxiansViewController: UIViewController,UIGestureRecognizerDelegate {
             }
         }
         bombs.removeAll()
-        
+        bombs = []
     }
     
     fileprivate func startGame() {
